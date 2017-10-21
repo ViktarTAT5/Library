@@ -21,6 +21,10 @@ public class Library {
 		books.add(book);
 	}
 	
+	public Book setBook(int index, Book book) {
+		return books.set(index, book);
+	}
+	
 	public Book getBook(int index) {	
 		return books.get(index);
 	}

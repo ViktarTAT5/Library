@@ -4,10 +4,14 @@ import by.htp.library.domen.Book;
 import by.htp.library.domen.Library;
 
 public class Librarian {
-	
+
 	Library library;
 	Library tempLibrary;
-	
+
+	private static final String DEL_BOOKS_MSG = "The book was deleted ";
+	private static final String ADD_BOOKS_MSG = "The book was added ";
+	private static final String AUTOR_NULL = "No autor specified ";
+
 	public Librarian(Library library) {
 		this.library = library;
 	}
@@ -15,9 +19,22 @@ public class Librarian {
 	public void addBook(Book book) {
 		if (!findCopy(book)) {
 			library.addBook(book);
-			addBookMsg();
+			print(ADD_BOOKS_MSG + book.toString());
 		} else {
 			copyExistMsg(book);
+		}
+	}
+
+	public void delBook(String title) {
+		if (title != null) {
+			for (int i = 0; i < library.getSize(); i++) {
+				if (title.equals(library.getBook(i).getTitle())) {
+					String temp = library.getBook(i).toString();
+					library.delBook(i);
+					print(DEL_BOOKS_MSG + temp);
+					return;
+				}
+			}
 		}
 	}
 
@@ -48,29 +65,41 @@ public class Librarian {
 				}
 			}
 		}
+		print(AUTOR_NULL);
 	}
-	
+
+	public static void sortingYear(Library library) {
+		if (library != null) {
+			for (int i = library.getSize() - 1; i >= 0; i--) {
+				for (int j = 0; j < i; j++) {
+					int yearOne = library.getBook(j).getYear();
+					int yearTwo = library.getBook(j + 1).getYear();
+					if (yearOne < yearTwo) {
+						Book temp = library.setBook(j, library.getBook(j + 1));
+						library.setBook(j + 1, temp);
+					}
+				}
+			}
+		}
+	}
+
 	public void showBooksLibrary() {
 		showBooks(library);
 	}
 
 	private static void showBooks(Library library) {
-		System.out.println("    -----------------------------");
+		print("    -----------------------------");
 		for (int i = 0; i < library.getSize(); i++) {
-			System.out.println(library.getBook(i).toString());
+			print(library.getBook(i).toString());
 		}
-		System.out.println("    -----------------------------");
+		print("    -----------------------------");
 	}
 
 	private static void copyExistMsg(Book book) {
-		System.out.println("The book " + book.toString() + " is already there");
+		print("The book " + book.toString() + " is already there");
 	}
 
-	private static void addBookMsg() {
-		System.out.println("The book was added");
-	}
-	
-	private static void delBookMsg() {
-		System.out.println("The book was deleted");
+	private static void print(String text) {
+		System.out.println(text);
 	}
 }
